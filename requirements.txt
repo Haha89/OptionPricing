@@ -1,0 +1,5 @@
+pandas~=1.5.2
+plotly
+scipy~=1.9.3
+yfinance~=0.2.3
+pydantic~=1.10.4
