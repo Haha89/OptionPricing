@@ -2,7 +2,7 @@ from datetime import date
 
 import pandas as pd
 
-from models import Environment, Put, Call
+from option_vol.models import Environment, Put, Call
 
 
 class ImpliedVolCalculator:
