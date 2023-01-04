@@ -1,8 +1,11 @@
+from typing import List
+
 OPTION_ATTRIBUTES = ["name", "type", "underlying", "strike", "maturity", "price", "implied_vol",
                      "delta", "gamma", "theta", "vega", "rho"]
 
 
-def display_options(elements):
+def display_options(elements: List):
+    """ Format a list of objects as a table in the console. Headers are based on elements content class """
     from prettytable import PrettyTable
     my_table = PrettyTable()
     attributes = _get_attributes(elements[0])

@@ -8,6 +8,12 @@ from option_vol.models import BaseOption
 class Plotting:
     @staticmethod
     def display_surfaces(options: List[BaseOption], element: str, path_png: str):
+        """ This functions generate two charts of 3d surface (one for Calls, one for Puts) of the evolution of
+         element for multiple strikes and maturity dates
+
+        :param options List of BaseOptions priced
+        :param element str, greek to display
+        """
         import plotly.graph_objects as go
         from plotly.subplots import make_subplots
 

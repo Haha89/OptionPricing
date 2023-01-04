@@ -8,6 +8,7 @@ class ImpliedVolCalculator:
         self.env = None
 
     def get_priced_options(self, underlying) -> List[BaseOption]:
+        """ Retrieves listed options for the underlying, then computes implied vol and greeks """
         self.env = Environment()
         spot = self.env.get_spot(underlying)
         print("Retrieving listed options from MarketWatch")
