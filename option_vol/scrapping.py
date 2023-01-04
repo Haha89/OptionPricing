@@ -18,16 +18,11 @@ class Scrapping:
         """
         Retrieves listed options for an underlying with their Strike and ask price
         :param underlying: string, name of the underlying
-        :return: a pandas DataFrame containing all options found in the website:
-
-        | option_type | strike | maturity     | price |
-        -------------------------------------------
-        |      C      |  50    |  01/01/2022  |   1   |
-        |      P      |  50    |  01/01/2022  |   0   |
-
+        :return: a list of BaseOption
         """
 
         found_options = []
+        print("Parsing html from marketwatch")
         options = pd.read_html(f"{BASE_URL}{underlying}")[INDEX_TABLE]
         options = options[[c for c in options.columns if options[c].isin(["Ask", "StrikePrice"]).any()]]
         options.columns = ["call_ask", "strike", "put_ask"]

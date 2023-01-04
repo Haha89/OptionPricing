@@ -12,7 +12,8 @@ class Singleton:
 
 class Environment(Singleton):
     spots, div_yield = {}, {}
-    risk_free_rate = None
+    risk_free_rate = 0
+    listed_options = {}
 
     def get_spot(self, underlying):
         if underlying not in self.spots:
@@ -23,3 +24,9 @@ class Environment(Singleton):
         if underlying not in self.div_yield:
             self.div_yield[underlying] = 0
         return self.div_yield[underlying]
+
+    def get_listed_options(self, underlying):
+        if underlying not in self.listed_options:
+            from option_vol.scrapping import Scrapping
+            self.listed_options[underlying] = Scrapping().parse_option(underlying=underlying)
+        return self.listed_options[underlying]
