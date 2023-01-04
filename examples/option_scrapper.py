@@ -1,9 +1,11 @@
+import pandas as pd
+
 from option_vol.implied_vol_calculator import ImpliedVolCalculator
 
 """ Display listed options for TSLA using marketwatch website"""
 
 UNDERLYING = "TSLA"
-RISK_FREE_RATE = 0.01
 
-options = ImpliedVolCalculator(UNDERLYING, RISK_FREE_RATE).get_listed_options()
-print(options.head(15))
+options = ImpliedVolCalculator().get_listed_options(UNDERLYING)
+options = [(o.get_name(), o.__class__.__name__, o.strike, o.maturity, o.price) for o in options]
+print(pd.DataFrame(options, columns=["Name", "Type", "Strike", "Maturity", "Price"]))

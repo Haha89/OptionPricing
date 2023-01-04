@@ -1,5 +1,9 @@
-import pandas as pd
 from datetime import datetime
+from typing import List
+
+import pandas as pd
+
+from option_vol.models import Call, Put, BaseOption
 
 BASE_URL = "https://bigcharts.marketwatch.com/quickchart/options.asp?symb="
 INDEX_TABLE = 2
@@ -8,9 +12,9 @@ INDEX_TABLE = 2
 class Scrapping:
 
     def __init__(self):
-        self.mat = ""
+        self.mat = datetime.today().date()
 
-    def parse_option(self, underlying):
+    def parse_option(self, underlying) -> List[BaseOption]:
         """
         Retrieves listed options for an underlying with their Strike and ask price
         :param underlying: string, name of the underlying
@@ -33,11 +37,11 @@ class Scrapping:
                 self.mat = datetime.strptime(row.call_ask.replace("Expires ", ""), "%B %d, %Y").date()
 
             elif is_float(row.call_ask):
-                found_options.append(("C", float(row.strike), self.mat, float(row.call_ask)))
-                found_options.append(("P", float(row.strike), self.mat, float(row.put_ask)))
+                found_options.append(Call(float(row.strike), self.mat, underlying, float(row.call_ask)))
+                found_options.append(Put(float(row.strike), self.mat, underlying, float(row.put_ask)))
 
         options.apply(lambda r: read_row(r), axis=1)
-        return pd.DataFrame(found_options, columns=["option_type", "strike", "maturity", "price"])
+        return found_options
 
 
 def is_float(element: any) -> bool:
