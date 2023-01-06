@@ -7,8 +7,10 @@ from option_vol.models import Environment
 
 UNDERLYING = "TSLA"
 RISK_FREE_RATE = 0.01
-PATH_PNG = fr"..\images\vol_surface_{UNDERLYING}.png"
+PATH_PNG = fr"..\images"
 
 Environment().risk_free_rate = RISK_FREE_RATE  # Discount factor used for option pricing
 
-ImpliedVolCalculator().get_implied_vol_surface(UNDERLYING, path.abspath(PATH_PNG))
+# ImpliedVolCalculator().get_implied_vol_surface(UNDERLYING, path.abspath(PATH_PNG))
+
+ImpliedVolCalculator().display_delta_gamma(UNDERLYING, path.abspath(PATH_PNG))
