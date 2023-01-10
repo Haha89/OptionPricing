@@ -1,3 +1,6 @@
+from option_vol.utils import YAHOO_MAPPING
+
+
 class Singleton:
     __instance = None
 
@@ -28,7 +31,8 @@ class Environment(Singleton):
             match shelf:
                 case "spots":
                     import yfinance as yf
-                    val = yf.download(tickers=underlying, period='1d', interval='1d')["Adj Close"][0]
+                    val = yf.download(tickers=YAHOO_MAPPING.get(underlying, underlying), period='1d', interval='1d')[
+                        "Adj Close"][0]
                 case "div_yield":
                     val = 0  # TO BE DONE
                 case "listed_options":

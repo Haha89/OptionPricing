@@ -1,7 +1,11 @@
 from typing import List
 
+import pandas as pd
+
 OPTION_ATTRIBUTES = ["name", "type", "underlying", "strike", "maturity", "price", "implied_vol",
                      "delta", "gamma", "theta", "vega", "rho"]
+
+YAHOO_MAPPING = {"SPX": "^GSPC"}
 
 
 def display_options(elements: List):
@@ -14,6 +18,10 @@ def display_options(elements: List):
     return my_table
 
 
+def options_to_df(elements: List):
+    return pd.DataFrame([e.__dict__ for e in elements])
+
+
 def _get_attributes(element):
     from option_vol.models import Put, Call
     if isinstance(element, (Call, Put)):
@@ -23,3 +31,7 @@ def _get_attributes(element):
 
 def _list_attributes(obj, attributes):
     return [round(e, 4) if isinstance(e := getattr(obj, o), float) else e for o in attributes]
+
+
+def to_title(title: str):
+    return title.replace("_", " ").title()
