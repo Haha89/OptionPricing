@@ -1,6 +1,7 @@
 from typing import List
 
 import pandas as pd
+from prettytable import PrettyTable
 
 OPTION_ATTRIBUTES = ["name", "type", "underlying", "strike", "maturity", "price", "implied_vol",
                      "delta", "gamma", "theta", "vega", "rho"]
@@ -8,9 +9,8 @@ OPTION_ATTRIBUTES = ["name", "type", "underlying", "strike", "maturity", "price"
 YAHOO_MAPPING = {"SPX": "^GSPC"}
 
 
-def display_options(elements: List):
+def display_options(elements: List) -> PrettyTable:
     """ Format a list of objects as a table in the console. Headers are based on elements content class """
-    from prettytable import PrettyTable
     my_table = PrettyTable()
     attributes = _get_attributes(elements[0])
     my_table.field_names = attributes
@@ -18,8 +18,8 @@ def display_options(elements: List):
     return my_table
 
 
-def options_to_df(elements: List):
-    return pd.DataFrame([e.__dict__ for e in elements])
+def options_to_df(elements: List, decimals=4) -> pd.DataFrame:
+    return pd.DataFrame([e.__dict__ for e in elements]).round(decimals)
 
 
 def _get_attributes(element):
@@ -29,9 +29,17 @@ def _get_attributes(element):
     raise ValueError("Object doesnt have any mapping")
 
 
-def _list_attributes(obj, attributes):
-    return [round(e, 4) if isinstance(e := getattr(obj, o), float) else e for o in attributes]
+def _list_attributes(obj, attributes) -> List:
+    return [round(e, 4) if is_float(e := obj.__getattribute__(o)) else e for o in attributes]
 
 
-def to_title(title: str):
+def to_title(title: str) -> str:
     return title.replace("_", " ").title()
+
+
+def is_float(element: any) -> bool:
+    try:
+        float(element)
+        return True
+    except (ValueError, TypeError):
+        return False

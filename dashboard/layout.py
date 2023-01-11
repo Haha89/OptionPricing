@@ -31,37 +31,26 @@ def set_layout(app):
                                 children=[
                                     html.Div(
                                         className="div-for-dropdown",
+                                        children=get_dropdown("underlying", UNDERLYINGS)),
+
+                                    html.Div(
+                                        className="div-for-dropdown",
+                                        children=get_dropdown("type", TYPES)),
+
+                                    html.Div(
+                                        className="div-for-dropdown",
+                                        children=get_dropdown("metric", METRICS)),
+
+                                    html.Div(
+                                        className="text-padding",
                                         children=[
-                                            dcc.Dropdown(
-                                                id="underlying-dropdown",
-                                                options=[{"label": i, "value": i} for i in UNDERLYINGS],
-                                                value=UNDERLYINGS[0],
-                                                placeholder="Select an underlying",
-                                            )
+                                            "Range around spot (+/- X%)"
                                         ],
                                     ),
                                     html.Div(
                                         className="div-for-dropdown",
-                                        children=[
-                                            dcc.Dropdown(
-                                                id="type-dropdown",
-                                                options=[{"label": i, "value": i} for i in TYPES],
-                                                value=TYPES[0],
-                                                placeholder="Select a type",
-                                            )
-                                        ],
-                                    ),
-                                    html.Div(
-                                        className="div-for-dropdown",
-                                        children=[
-                                            dcc.Dropdown(
-                                                id="metric-dropdown",
-                                                options=[{"label": k, "value": v} for k, v in METRICS.items()],
-                                                value=list(METRICS.values())[0],
-                                                placeholder="Select a metric",
-                                            )
-                                        ],
-                                    ),
+                                        children=[dcc.Slider(min=10, max=50, step=10, value=20, id='slider-range')]),
+
                                     html.P(id="underlying-spot"),
                                     html.P(id="total-options"),
                                 ],
@@ -89,8 +78,23 @@ def set_layout(app):
                                       style_data={'backgroundColor': 'rgb(50, 50, 50)', 'color': 'white'},
                                       ),
                         ],
-                    ),
+                    )
                 ],
             )
         ]
     )
+
+
+def get_dropdown(name, values):
+    """
+    Returns a Dash dropdown element with options passed as list or dictionary.
+    Raises error if options passed are not list or dictionary
+    """
+    if isinstance(values, dict):
+        options = [{"label": k, "value": v} for k, v in values.items()]
+    elif isinstance(values, list):
+        options = [{"label": i, "value": i} for i in values]
+    else:
+        raise ValueError(f"values cannot be of type {type(values)}")
+    placeholder = f"{name.title()} selection"
+    return [dcc.Dropdown(id=f"{name}-dropdown", options=options, value=options[0]["value"], placeholder=placeholder)]

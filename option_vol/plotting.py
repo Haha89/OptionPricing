@@ -1,6 +1,5 @@
 from typing import List
 
-import numpy as np
 import pandas as pd
 
 from option_vol.models import BaseOption
@@ -8,10 +7,10 @@ from option_vol.utils import to_title
 
 
 class Plotting:
-    @staticmethod  # TODO REMOVE AND USE FUNCTION BELOW
+    @staticmethod
     def display_surfaces(options: List[BaseOption], elements: List[str], path_png: str):
         """ This functions generate two charts of 3d surface (one for Calls, one for Puts) of the evolution of
-         element for multiple strikes and maturity dates
+         element for multiple strikes and maturity dates.
 
         :param options List of BaseOptions priced
         :param elements List of str, greeks to display
@@ -19,9 +18,7 @@ class Plotting:
         import plotly.graph_objects as go
         from plotly.subplots import make_subplots
 
-        df = pd.DataFrame(
-            [(o.type, o.strike, o.maturity) + tuple(map(lambda e: o.__getattribute__(e), elements)) for o in options],
-            columns=["type", "strike", "maturity"] + elements)
+        df = pd.DataFrame([vars(o) for o in options], columns=["type", "strike", "maturity"] + elements)
 
         option_types = df.type.unique()
         nb_rows, nb_cols = len(elements), len(option_types)
@@ -49,6 +46,9 @@ class Plotting:
 
     @staticmethod
     def get_surface(options: List[BaseOption], element: str):
+        """ creates a surface plot from a list of options, x-axis is maturity, y-axis is strike, z-axis is attribute
+         specified by element with interpolation and returns plot data and layout in a dictionary form
+         """
 
         df = pd.DataFrame(
             [(o.strike, o.maturity, o.__getattribute__(element)) for o in options],
@@ -56,9 +56,8 @@ class Plotting:
 
         pivot = df.pivot_table(index="strike", values=element, columns="maturity", aggfunc='first')
         pivot = pivot.interpolate(method='polynomial', order=2)
-        trace1 = dict(type="surface", x=pivot.index, y=pivot.columns, z=np.array(pivot.values).transpose(),
+        trace1 = dict(type="surface", x=pivot.columns, y=pivot.index, z=pivot.values,
                       hoverinfo="x+y+z", showscale=False, scene="scene",
-
                       colorscale=[
                           [0, "rgb(230,245,254)"],
                           [0.4, "rgb(123,171,203)"],
@@ -76,8 +75,8 @@ class Plotting:
                 camera={"eye": {"x": 2, "y": 2, "z": 2}},
                 aspectmode="manual",
                 aspectratio=dict(x=5, y=5, z=3),
-                xaxis={"title": "Strike", "range": [min(pivot.index), max(pivot.index)]},
-                yaxis={"title": "Maturity", "categoryorder": "array", "categoryarray": list(reversed(pivot.columns))},
+                yaxis={"title": "Strike", "range": [min(pivot.index), max(pivot.index)]},
+                xaxis={"title": "Maturity", "categoryorder": "array", "categoryarray": list(reversed(pivot.columns))},
                 zaxis={"title": to_title(element)},
             ),
         )

@@ -4,6 +4,7 @@ from typing import List
 import pandas as pd
 
 from option_vol.models import Call, Put, BaseOption
+from option_vol.utils import is_float
 
 BASE_URL = "https://bigcharts.marketwatch.com/quickchart/options.asp?symb="
 INDEX_TABLE = 2
@@ -37,11 +38,3 @@ class Scrapping:
 
         options.apply(lambda r: read_row(r), axis=1)
         return found_options
-
-
-def is_float(element: any) -> bool:
-    try:
-        float(element)
-        return True
-    except (ValueError, TypeError):
-        return False
