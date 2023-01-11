@@ -1,14 +1,13 @@
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-
+import os
 
 from dash import Dash
+
 from dashboard.callbacks import assign_callbacks
 from dashboard.layout import set_layout
 
 
 def run_app():
-    app = Dash(__name__)
+    app = Dash(__name__, assets_folder=os.getcwd() + '/dashboard/assets')
     app.layout = set_layout(app)
     assign_callbacks(app)
     app.run_server(debug=True)
