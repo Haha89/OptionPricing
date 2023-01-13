@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import List
 
 import pandas as pd
@@ -32,7 +32,7 @@ class Scrapping:
             if "Expires " in str(row.call_ask):
                 self.mat = datetime.strptime(row.call_ask.replace("Expires ", ""), "%B %d, %Y").date()
 
-            elif is_float(row.call_ask):
+            elif is_float(row.call_ask) and (self.mat > date.today()):
                 found_options.append(Call(float(row.strike), self.mat, underlying, float(row.call_ask)))
                 found_options.append(Put(float(row.strike), self.mat, underlying, float(row.put_ask)))
 

@@ -10,7 +10,7 @@ def run_app():
     app = Dash(__name__, assets_folder=os.getcwd() + '/dashboard/assets')
     app.layout = set_layout(app)
     assign_callbacks(app)
-    app.run_server(debug=True)
+    app.run_server(host='0.0.0.0')
 
 
 if __name__ == '__main__':

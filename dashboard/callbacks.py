@@ -4,7 +4,7 @@ from dash import Input, Output
 from dashboard.constants import metrics
 from option_vol.implied_vol_calculator import ImpliedVolCalculator
 from option_vol.plotting import Plotting
-from option_vol.utils import options_to_df, to_title
+from option_vol.utils import list_to_df, to_title
 
 
 def assign_callbacks(app):
@@ -34,7 +34,7 @@ def assign_callbacks(app):
             options = list(filter(lambda o: o.type == _type, options))
             surface = Plotting.get_surface(options, metric)
             print("Sending updates")
-            table_options = options_to_df(options)[cols].rename(
+            table_options = list_to_df(options)[cols].rename(
                 columns=dict(zip(cols, list(map(to_title, cols))))).to_dict("records")
             return [f"{underlying} spot: {spot}", f"Nb options {len(options)}",
                     table_options, surface]

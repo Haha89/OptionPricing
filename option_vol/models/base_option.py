@@ -1,11 +1,13 @@
-import datetime
-from datetime import date
+from datetime import date, datetime
 from math import log, sqrt, exp
 
+import pytz
 from scipy.stats import norm
 
 from option_vol.models import Environment
 from option_vol.utils import display_options
+
+newYorkTz = pytz.timezone("America/New_York")
 
 
 class BaseOption:
@@ -19,7 +21,7 @@ class BaseOption:
 
         self.name = self.get_name()
         self.implied_vol = None
-        self.T = (self.maturity - datetime.date.today()).days / 252
+        self.T = (self.maturity - datetime.now(newYorkTz).date()).days / 252
         self.r = Environment().risk_free_rate
         self.spot = Environment().get_spot(self.underlying)
         self.div_yield = Environment().get_div_yield(self.underlying)

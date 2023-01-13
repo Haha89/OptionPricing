@@ -18,7 +18,7 @@ def display_options(elements: List) -> PrettyTable:
     return my_table
 
 
-def options_to_df(elements: List, decimals=4) -> pd.DataFrame:
+def list_to_df(elements: List, decimals=4) -> pd.DataFrame:
     return pd.DataFrame([e.__dict__ for e in elements]).round(decimals)
 
 
